@@ -1,0 +1,19 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inconsolata', monospace;
+}
+
+.pt-10 {
+  padding-top: 10px;
+}
+
+.container {
+  max-width: 1510px;
+  margin: auto;
+  padding: 0 2rem;
+}
