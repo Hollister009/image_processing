@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+
+        main {
+            padding: 16px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .form {
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        fieldset {
+            border: none;
+        }
+
+        #preview {
+            width: 400px;
+            height: 200px;
+            margin: 20px 0;
+            border: 1px solid black;
+        }
+
+        input[type="submit"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h2>Image Resizer</h2>
+        <form class="form" action="" method="post">
+            <fieldset class="image-dimension">
+                <label for="width">Width:</label>
+                <input type="number" name="width" id="width">
+                <label for="height">Height:</label>
+                <input type="number" name="height" id="height">
+                <label>
+                    Keep ratio:
+                    <input type="checkbox" name="ratio" id="ratio" checked>
+                </label>
+            </fieldset>
+            <canvas id="preview"></canvas>
+            <input type="submit" value="Save">
+        </form>
+    </main>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        main {
+            padding: 16px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .form {
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        fieldset {
+            border: none;
+        }
+
+        #previewArea {
+            width: 400px;
+            height: 200px;
+            margin: 20px 0;
+            border: 1px solid black;
+        }
+
+        input[type="submit"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h2>Image Resizer</h2>
+        <form class="form" action="" method="post">
+            <fieldset class="image-dimension">
+                <label for="width">Width:</label>
+                <input type="number" name="width" id="width">
+                <label for="height">Height:</label>
+                <input type="number" name="height" id="height">
+                <label>
+                    Keep ratio:
+                    <input type="checkbox" name="ratio" id="ratio" checked>
+                </label>
+            </fieldset>
+            <canvas id="previewArea"></canvas>
+            <input type="submit" value="Save">
+        </form>
+    </main>
+</body>
+<script>
+        const canvas = document.getElementById('previewArea');
+        const ctx = canvas.getContext('2d');
+
+        make_base();
+
+        function make_base() {
+            const base_image = new Image();
+            base_image.src = 'assets/placeholder.jpg';
+            base_image.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(base_image, 0, 0, base_image.width, base_image.height,     // source rectangle
+                                          0, 0, canvas.width, canvas.height); // destination rectangle
+            }
+        }
+</script>
+</html>
