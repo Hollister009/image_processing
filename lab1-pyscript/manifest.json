@@ -1,0 +1,22 @@
+{
+  "name": "Image Resizer PWA",
+  "short_name": "Image Resizer PWA",
+  "start_url": ".",
+  "background_color": "#282c2d",
+  "theme_color": "#003eaa",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/logo64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

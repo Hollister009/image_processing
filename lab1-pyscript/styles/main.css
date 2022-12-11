@@ -1,0 +1,100 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-blue-60: #0060df;
+  --color-blue-70: #003eaa;
+  --color-gray-20: #dedede;
+  --color-light-gray: #F0F0F4;
+  --color-secondary-text: #5B5B66;
+  --color-dark-gray-28: #282c2d;
+  --color-dark-gray-20: #202224;
+  --color-white: #ffffff;
+  --color-black: #000000;
+}
+
+body {
+  font-family: 'Inconsolata', monospace;
+}
+
+main {
+  background-color: var(--color-dark-gray-20);
+  color: var(--color-light-gray);
+}
+
+input[type="file"] {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+.container {
+  display: flex;
+  max-width: 980px;
+  margin: 0 auto;
+  height: 100vh;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.sidePanel {
+  flex-basis: 30%;
+  background-color: var(--color-dark-gray-28);
+  color: var(--color-gray-20);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+#preview {
+  width: 400px;
+  height: 200px;
+  margin: 20px 0;
+  border: 1px solid var(--color-black);
+}
+
+.btn {
+  background-color: var(--color-blue-60);
+  color: var(--color-white);
+  border: none;
+  padding: 0 50px;
+  border-radius: 5px;
+  font-size: 16px;
+  line-height: 1.75;
+  cursor: pointer;
+}
+
+.canvas {
+  width: 100%;
+  border: 1px solid;
+}
+
+.fieldset {
+  border: none;
+}
+
+.fieldset label {
+  cursor: pointer;
+}
+
+.row {
+  display: inline-flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.divider {
+  height: 1px;
+  border: none;
+  margin: 20px 0;
+  background: var(--color-light-gray);
+}
