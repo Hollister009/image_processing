@@ -55,13 +55,6 @@ input[type="file"] {
   padding: 20px;
 }
 
-#preview {
-  width: 400px;
-  height: 200px;
-  margin: 20px 0;
-  border: 1px solid var(--color-black);
-}
-
 .btn {
   background-color: var(--color-blue-60);
   color: var(--color-white);
@@ -73,9 +66,20 @@ input[type="file"] {
   cursor: pointer;
 }
 
-.canvas {
+.preview {
+  display: flex;
   width: 100%;
-  border: 1px solid;
+  height: 400px;
+  background-color: white;
+  border: 1px solid var(--color-black);
+}
+
+.preview > img {
+  margin: 0 auto;
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  object-fit: scale-down;;
 }
 
 .fieldset {

@@ -11,11 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;500&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo64.png">
-  <link rel="stylesheet" href="styles/main.css">
-  <!-- <link rel="stylesheet" href="styles/pyscript.css"> -->
-  <!-- <script src="placeholder.js"></script> -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- <link rel="stylesheet" href="css/pyscript.css"> -->
   <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-  <script src="./index.js"></script>
+  <script src="js/index.js"></script>
   <title>Image Resizer</title>
   <py-env>
     - pillow
@@ -23,60 +22,8 @@
 </head>
 
 <body>
-  <main class="container">
-    <aside class="sidePanel">
-      <input type="file" name="file" id="file">
-      <button id="openButton" class="btn">Open</button>
-      <button id="saveButton" class="btn">Save</button>
-    </aside>
-    <div class="mainContent">
-      <h2>Image Resizer: </h2>
-      <canvas id="previewArea" class="canvas"></canvas>
-      <hr class="divider" />
-      <fieldset id="dimenssions" class="fieldset">
-        <div class="row">
-          <label>
-            Width:
-            <input type="number" name="width" id="width">
-          </label>
-          <label>
-            Height:
-            <input type="number" name="height" id="height">
-          </label>
-        </div>
-        <div class="row">
-          <label>
-            Keep ratio:
-            <input type="checkbox" name="ratio" id="ratio" checked>
-          </label>
-        </div>
-      </fieldset>
-    </div>
-  </main>
-  <script>
-      const fileInput = document.getElementById('file');
-      const openButton = document.getElementById('openButton');
-      const saveButton = document.getElementById('saveButton');
-
-      fileInput.addEventListener('change', (event) => {
-        console.log(event.target.files);
-      });
-
-      openButton.addEventListener('click', () => {
-        fileInput.click();
-      });
-
-      saveButton.addEventListener('click', () => {
-        console.log('filedialog');
-      });
-  </script>
-  <py-script>
-    from PIL import Image
-  </py-script>
-  <!-- <script>
-    // const canvas = document.getElementById('previewArea');
-    // Placeholder.init(canvas);
-  </script> -->
+  <main id="root" class="container"></main>
+  <py-script src='python/image_processing.py'></py-script>
 </body>
 
 </html>
