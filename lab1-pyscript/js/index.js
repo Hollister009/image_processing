@@ -38,7 +38,7 @@ class App {
   get template() {
     return `
       <aside class="sidePanel">
-        <input type="file" name="file" id="file">
+        <input type="file" name="file" id="file" accept="image/*">
         <button id="openButton" class="btn">Open</button>
         <button id="saveButton" class="btn">Save</button>
       </aside>

@@ -1,4 +1,4 @@
-from js import document, window, console, Object
+from js import document, window, console, confirm, Object
 from pyodide.ffi import create_proxy, to_js
 import asyncio
 
@@ -10,11 +10,13 @@ previewArea = document.getElementById('previewArea')
 
 target_file = None
 
+
 async def open_file(x):
   fileInput.click()
 
+
 async def process_file(event):
-  global target_file 
+  global target_file
   file_list = event.target.files
   target_file = file_list.item(0)
 
@@ -23,15 +25,22 @@ async def process_file(event):
   previewArea.innerHTML = ''
   previewArea.appendChild(new_image)
 
+
 async def save_file_old(file):
-  blob = window.URL.createObjectURL(file)
-  tag = document.createElement('a')
-  tag.href = blob
-  tag.download = file.name
-  tag.click()
+  if confirm('Do you confirm to save?'):
+    blob = window.URL.createObjectURL(file)
+    tag = document.createElement('a')
+    tag.href = blob
+    tag.download = file.name
+    tag.click()
+
 
 async def save_file(x):
   if not target_file:
+    return
+
+  if not hasattr(window, 'showSaveFilePicker'):
+    await save_file_old(target_file)
     return
 
   try:
@@ -45,7 +54,7 @@ async def save_file(x):
     await file.close()
   except Exception as e:
     console.log('Exception: ' + str(e))
-    await save_file_old(target_file)
+
 
 def main():
   # Create a Python proxy for the callback function
@@ -56,4 +65,6 @@ def main():
   openButton.addEventListener('click', open_event)
   saveButton.addEventListener('click', save_event)
   fileInput.addEventListener('change', file_event)
+
+
 main()
