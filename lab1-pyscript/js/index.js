@@ -50,9 +50,9 @@ class App {
         <hr class="divider" />
         <div class="row">
           <fieldset id="dimenssions" class="fieldset">
-            <input type="number" name="width" id="width">
+            <input type="number" name="width" id="width" value=0 min=0>
             <span>X</span>
-            <input type="number" name="height" id="height">
+            <input type="number" name="height" id="height" value=0 min=0>
           </fieldset>
           <label>
             Keep ratio:
