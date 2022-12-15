@@ -45,25 +45,20 @@ class App {
       <div class="mainContent">
         <h2>Image Resizer: </h2>
         <div id="previewArea" class="preview">
-          <img src="assets/placeholder.jpg" alt="">
+          <img id="originalImage" src="assets/placeholder.jpg" alt="">
         </div>
         <hr class="divider" />
-        <fieldset id="dimenssions" class="fieldset">
-          <div class="row">
-            <label>
-              Width:
-              <input type="number" name="width" id="width">
-            </label>
-            <label>
-              Height:
-              <input type="number" name="height" id="height">
-            </label>
-            <label>
-              Keep ratio:
-              <input type="checkbox" name="ratio" id="ratio" checked>
-            </label>
-          </div>
-        </fieldset>
+        <div class="row">
+          <fieldset id="dimenssions" class="fieldset">
+            <input type="number" name="width" id="width">
+            <span>X</span>
+            <input type="number" name="height" id="height">
+          </fieldset>
+          <label>
+            Keep ratio:
+            <input type="checkbox" name="ratio" id="ratio" checked>
+          </label>
+        </div>
       </div>
     `;
   }
