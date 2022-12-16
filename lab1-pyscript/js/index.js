@@ -55,8 +55,8 @@ class App {
             <input type="number" name="height" id="height" value=0 min=0>
           </fieldset>
           <label>
-            Keep ratio:
-            <input type="checkbox" name="ratio" id="ratio" checked>
+          <input type="checkbox" name="ratio" id="ratio" checked>
+          Keep aspect ratio
           </label>
         </div>
       </div>

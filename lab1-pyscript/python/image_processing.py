@@ -1,5 +1,8 @@
-from js import document, window, console, confirm, Object
+from js import document, window, console, confirm, Object, Uint8Array, File
 from pyodide.ffi import create_proxy, to_js
+from PIL import Image
+import pathlib
+import io
 import asyncio
 
 root = document.getElementById('root')
@@ -13,6 +16,7 @@ aspectRatio = document.getElementById('ratio')
 original_image = document.getElementById('originalImage')
 
 target_file = None
+pillow_image = None
 original_width_to_height_ratio = 0
 
 
@@ -56,29 +60,45 @@ async def process_file(event):
 
 async def save_file_fallback(file):
     if confirm('Do you confirm to save?'):
+      try:
         blob = window.URL.createObjectURL(file)
         tag = document.createElement('a')
         tag.href = blob
         tag.download = file.name
         tag.click()
+      except Exception as e:
+          console.log('Exception: ' + str(e))
+
+
+def convert_to_file():
+    # Convert Pillow object array back into File type that createObjectURL will take
+    my_stream = io.BytesIO()
+    format = pathlib.Path(target_file.name).suffix[1:].upper()
+    format = 'JPEG' if format == 'JPG' else format
+    pillow_image.save(my_stream, format=format)
+
+    # Create a JS File object with our data and the proper mime type
+    return File.new([Uint8Array.new(my_stream.getvalue())], target_file.name, {type: f'image/{format.lower()}'})
 
 
 async def save_file(x):
-    if not target_file:
+    if not target_file or not pillow_image:
         return
 
+    converted_image = convert_to_file()
+
     if not hasattr(window, 'showSaveFilePicker'):
-        await save_file_fallback(target_file)
+        await save_file_fallback(converted_image)
         return
 
     try:
         options = {
             "startIn": "downloads",
-            "suggestedName": target_file.name
+            "suggestedName": converted_image.name
         }
         file_handle = await window.showSaveFilePicker(Object.fromEntries(to_js(options)))
         file = await file_handle.createWritable()
-        await file.write(target_file)
+        await file.write(converted_image)
         await file.close()
     except Exception as e:
         console.log('Exception: ' + str(e))
@@ -93,7 +113,7 @@ async def width_change(event):
     height_value = round(width_value /
                          original_width_to_height_ratio) if save_aspect else int(heightField.value)
 
-    resize(width_value, height_value)
+    await resize(width_value, height_value)
 
 
 async def height_change(event):
@@ -105,12 +125,25 @@ async def height_change(event):
     width_value = round(height_value *
                         original_width_to_height_ratio) if save_aspect else int(widthField.value)
 
-    resize(width_value, height_value)
+    await resize(width_value, height_value)
 
 
-def resize(width, height):
+async def resize(width, height):
+    global pillow_image
     widthField.value = width
     heightField.value = height
+
+    array_buf = Uint8Array.new(await target_file.arrayBuffer())
+    # BytesIO wants a bytes-like object, so convert to bytearray first
+    bytes_list = bytearray(array_buf)
+    my_bytes = io.BytesIO(bytes_list)
+
+    # Create PIL image from np array
+    pillow_image = Image.open(my_bytes).resize((width, height))
+
+    # Log some of the image data for testing
+    console.log(
+        f"{pillow_image.format= } {pillow_image.width= } {pillow_image.height= }")
 
 
 def main():
