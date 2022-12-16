@@ -14,15 +14,16 @@
   <link rel="stylesheet" href="css/main.css">
   <!-- <link rel="stylesheet" href="css/pyscript.css"> -->
   <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  <script defer src="https://pyscript.net/unstable/pyscript.js"></script>
   <script src="js/index.js"></script>
   <title>Image Resizer</title>
 </head>
+
 <body>
-  <py-config type="json">
-    {
-      "packages": ["Pillow"]
-    }
+  <py-config type="toml">
+    packages = ["Pillow"]
+    [[fetch]]
+        files=["./python/resizer.py"]
   </py-config>
   <main id="root" class="container"></main>
   <py-script src='python/image_processing.py'></py-script>
