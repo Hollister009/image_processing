@@ -27,7 +27,16 @@
   </py-config>
   <main id="root" class="container"></main>
   <py-script>
+    from js import document
     from python.main import Program
+
+    def validate_width():
+      element = document.getElementById("width")
+      print(element.value)
+    
+    def validate_height():
+      element = document.getElementById("height")
+      print(element.value)
 
     app = Program()
     app.main()

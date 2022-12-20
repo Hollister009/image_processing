@@ -47,16 +47,16 @@ class App {
         <div id="previewArea" class="preview">
           <img id="originalImage" src="assets/placeholder.jpg" alt="">
         </div>
-        <hr class="divider" />
+        <hr class="divider">
         <div class="row">
-          <fieldset id="dimenssions" class="fieldset">
-            <input type="number" name="width" id="width" value=0 min=0>
+          <fieldset id="dimensions" class="fieldset">
+            <input type="number" name="width" id="width" value=0 min=0 py-input="validate_width()">
             <span>X</span>
-            <input type="number" name="height" id="height" value=0 min=0>
+            <input type="number" name="height" id="height" value=0 min=0 py-input="validate_height()">
           </fieldset>
           <label>
-          <input type="checkbox" name="ratio" id="ratio" checked>
-          Keep aspect ratio
+            <input type="checkbox" name="ratio" id="ratio" checked>
+            Keep aspect ratio
           </label>
         </div>
       </div>

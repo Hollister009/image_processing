@@ -9,7 +9,8 @@
   --color-blue-70: #003eaa;
   --color-gray-20: #dedede;
   --color-light-gray: #F0F0F4;
-  --color-secondary-text: #5B5B66;
+  --color-light-gray-53: #53575a;
+  --color-dark-gray-32: #323537;
   --color-dark-gray-28: #282c2d;
   --color-dark-gray-20: #202224;
   --color-white: #ffffff;
@@ -84,6 +85,18 @@ input[type="file"] {
 
 .fieldset {
   border: none;
+  display: inline-flex;
+  gap: 5px;
+}
+
+.fieldset input[type="number"] {
+  background-color: var(--color-dark-gray-32);
+  border-color: var(--color-light-gray-53);
+  color: var(--color-white);
+  appearance: textfield;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
 }
 
 .fieldset label {
