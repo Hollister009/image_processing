@@ -23,10 +23,15 @@
   <py-config type="toml">
     packages = ["Pillow"]
     [[fetch]]
-        files=["./python/resizer.py"]
+        files=["./python/resizer.py", "./python/main.py"]
   </py-config>
   <main id="root" class="container"></main>
-  <py-script src='python/image_processing.py'></py-script>
+  <py-script>
+    from python.main import Program
+
+    app = Program()
+    app.main()
+  </py-script>
 </body>
 
 </html>
