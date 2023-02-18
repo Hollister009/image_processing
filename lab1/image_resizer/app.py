@@ -10,27 +10,34 @@ FILETYPES = (
 )
 
 PLACEHOLDER_PATH = "assets/placeholder.jpg"
+HEIGHT_OFFSET = 70
 
 class ImageResizer(tk.Tk):
     def __init__(self, canvas_width, canvas_height):
         super().__init__()
-        self.resizable(0, 0)
         self.title('Image Resizer')
-
-        # Opened image references
-        self.original_image = None
-        self.resized_image = None
-        self.file_path = None
-
-        # Picture frame
-        self.picture_frame = ttk.Frame(self)
-        
-        # Controls frame
-        self.controls_frame = ttk.Frame(self)
-
-        # Canvas width & height
+        self.resizable(0, 0)
         self.canvas_width = canvas_width
         self.canvas_height = canvas_height
+        self.center_window()
+        self.setup_ui()
+
+    def center_window(self):
+        """ Center the window on the screen """
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = int((screen_width - self.canvas_width) / 2)
+        y = int((screen_height - self.canvas_height) / 2)
+        self.geometry(f"{self.canvas_width}x{self.canvas_height+HEIGHT_OFFSET}+{x}+{y}")
+
+    def setup_ui(self):
+        self.setup_picture_frame()
+        self.setup_controls_frame()
+
+    def setup_picture_frame(self):
+        # Picture frame
+        self.picture_frame = ttk.Frame(self)
+        self.picture_frame.grid(row=0, column=0)
 
         # Canvas
         self.canvas = tk.Canvas(
@@ -40,30 +47,22 @@ class ImageResizer(tk.Tk):
         self.canvas.grid(row=0, column=0)
 
         # Resolution label
-        self.resolution_label = ttk.Label(self.picture_frame, text="Original resolution: -x-\nResized resolution: -x-")
+        self.resolution_label = ttk.Label(
+            self.picture_frame,
+            text="Original resolution: -x-\nResized resolution: -x-")
         self.resolution_label.grid(row=1, column=0)
-
-        self.picture_frame.grid(row=0, column=0)
-        self.controls_frame.grid(row=1, column=0)
-        
         self.set_picture(PLACEHOLDER_PATH)
 
+    def setup_controls_frame(self):
+        # Controls frame
+        self.controls_frame = ttk.Frame(self)
+        self.controls_frame.grid(row=1, column=0)
+
         # Buttons
-        open_button = ttk.Button(self.controls_frame, text='Open')
-        open_button['command'] = self.open_picture
-        open_button.grid(row=0, column=0)
-
-        save_button = ttk.Button(self.controls_frame, text='Save')
-        save_button['command'] = self.save_picture
-        save_button.grid(row=0, column=1)
-
-        save_button = ttk.Button(self.controls_frame, text='Resize')
-        save_button['command'] = self.resize_picture
-        save_button.grid(row=0, column=2)
-
-        save_button = ttk.Button(self.controls_frame, text='Clear')
-        save_button['command'] = self.clear_picture
-        save_button.grid(row=0, column=3)
+        ttk.Button(self.controls_frame, text='Open', command=self.open_picture).grid(row=0, column=0)
+        ttk.Button(self.controls_frame, text='Save', command=self.save_picture).grid(row=0, column=1)
+        ttk.Button(self.controls_frame, text='Resize', command=self.resize_picture).grid(row=0, column=2)
+        ttk.Button(self.controls_frame, text='Clear', command=self.clear_picture).grid(row=0, column=3)
 
     def open_picture(self):
         """ Open the picture """
@@ -102,10 +101,12 @@ class ImageResizer(tk.Tk):
         # Get the size of the image object
         width, height = self.original_image.size
         self.resized_image = self.update_resolution()
-        new_width, new_height = self.resized_image.size
-        
-        # Update the resolution label
-        self.resolution_label.config(text=f"Original resolution: {width}x{height}\nResized resolution: {new_width}x{new_height}")
+
+        try:
+            new_width, new_height = self.resized_image.size
+            self.resolution_label.config(text=f"Original resolution: {width}x{height}\nResized resolution: {new_width}x{new_height}")
+        except:
+            return
 
     def clear_picture(self):
         """ Clear the picture """
@@ -141,10 +142,7 @@ class ImageResizer(tk.Tk):
             anchor=tk.NW,
             image=self.tk_image)
         
-    def update_resolution(self):
-        if self.original_image is None:
-            return
-        
+    def update_resolution(self):        
         # OpenCV requires an image in numpy array format
         image_np = cv2.imread(self.file_path)
 
@@ -164,6 +162,8 @@ class ImageResizer(tk.Tk):
             resized_image = Image.fromarray(image_np)
 
             return resized_image
+        else:
+            return self.resized_image
 
 if __name__ == '__main__':
     app = ImageResizer(640, 480)
