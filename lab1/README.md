@@ -1,6 +1,9 @@
 # Image Resizer
 Image Resizer is a simple desktop application built with Python and tkinter that allows users to open, resize, and save images in various formats.
 
+![screen-1](./image_resizer/assets/screen-1.png)
+![screen-2](./image_resizer/assets/screen-2.png)
+
 ## Requirements
  - Python 3.6 or later
  - tkinter
