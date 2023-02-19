@@ -1,7 +1,12 @@
+import os
+import re
 import tkinter as tk
-from tkinter import filedialog, simpledialog, messagebox, ttk
+from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
-import cv2
+from PIL.Image import Resampling
+
+from custom_dialog import CustomDialog
+from super_resolution import SuperResolution
 
 FILETYPES = (
     ("JPEG files", "*.jpg"),
@@ -11,6 +16,7 @@ FILETYPES = (
 
 PLACEHOLDER_PATH = "assets/placeholder.jpg"
 HEIGHT_OFFSET = 70
+MODELS_DIR =  "models"
 
 class ImageResizer(tk.Tk):
     def __init__(self, canvas_width, canvas_height):
@@ -100,13 +106,30 @@ class ImageResizer(tk.Tk):
 
         # Get the size of the image object
         width, height = self.original_image.size
-        self.resized_image = self.update_resolution()
+
+        # Show the input dialog to get new resolution and model path
+        input_result = self.show_input_dialog()
+
+        if input_result is not None:
+            w, h, model_path = input_result
+
+            print(model_path)
+
+            if model_path:
+                sr = SuperResolution(self.file_path)
+                scale_factor = int(re.findall(r'\d+', model_path)[0])
+
+                self.resized_image = sr.upscale_image(scale_factor, model_path)
+            else:
+                self.resized_image = self.update_resolution(w, h)
 
         try:
-            new_width, new_height = self.resized_image.size
-            self.resolution_label.config(text=f"Original resolution: {width}x{height}\nResized resolution: {new_width}x{new_height}")
-        except:
-            return
+            if self.resized_image is not None:
+                new_width, new_height = self.resized_image.size
+                self.set_picture('', pil_img=self.resized_image)
+                self.resolution_label.config(text=f"Original resolution: {width}x{height}\nResized resolution: {new_width}x{new_height}")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def clear_picture(self):
         """ Clear the picture """
@@ -119,19 +142,23 @@ class ImageResizer(tk.Tk):
         self.resized_image = None
         self.file_path = None
 
-    def set_picture(self, file_path, cache_img=False):
+    def set_picture(self, file_path, cache_img=False, pil_img=None):
         """ Set the picture to the canvas """
-        pil_img = Image.open(file_path)
+        if pil_img is None:
+            pil_img = Image.open(file_path)
 
         if cache_img:
             # Save the image object for future reference
             self.original_image = pil_img
             self.file_path = file_path
 
+            width, height = self.original_image.size
+            self.resolution_label.config(text=f"Original resolution: {width}x{height}\nResized resolution: -x-")
+
         # Resize the picture for canvas
         resized_img = pil_img.resize(
             (self.canvas_width, self.canvas_height),
-            Image.ANTIALIAS)
+            Resampling.LANCZOS)
 
         self.tk_image = ImageTk.PhotoImage(resized_img)
 
@@ -142,28 +169,28 @@ class ImageResizer(tk.Tk):
             anchor=tk.NW,
             image=self.tk_image)
         
-    def update_resolution(self):        
-        # OpenCV requires an image in numpy array format
-        image_np = cv2.imread(self.file_path)
+    def update_resolution(self, new_width, new_height):
+        """ Update the resolution """
+        return self.original_image.resize((new_width, new_height), Image.NEAREST)
 
-        # Get the new resolution from the user
-        new_resolution = simpledialog.askstring("New Resolution", "Enter the new resolution (e.g. 640x480):")
+    def show_input_dialog(self):
+        # Define the input fields and options
+        model_options = [f for f in os.listdir(MODELS_DIR) if f.endswith(".pb")]
+        options = {"Model Path": model_options}
 
-        if new_resolution:
-            # Split the new resolution string into width and height
-            new_width, new_height = new_resolution.split("x")
-            new_width = int(new_width)
-            new_height = int(new_height)
+        # Create a CustomDialog instance
+        dialog = CustomDialog(self, "Enter new resolution and model path:",
+                            fields=[("New Width", 640), ("New Height", 480), ("Model Path", "", "select")],
+                            options=options)
 
-            # Resize the image using OpenCV
-            image_np = cv2.resize(image_np, (new_width, new_height))
+        # Show the dialog and wait for user input
+        result = dialog.show()
 
-            # Convert the numpy array back to a PIL image
-            resized_image = Image.fromarray(image_np)
-
-            return resized_image
+        # Return the result
+        if result:
+            return int(result["New Width"]), int(result["New Height"]), result["Model Path"]
         else:
-            return self.resized_image
+            return None
 
 if __name__ == '__main__':
     app = ImageResizer(640, 480)
